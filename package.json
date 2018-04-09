@@ -1,0 +1,10 @@
+{
+  "name": "Frodocoin",
+  "version": "1.0.0",
+  "description": "The most awesome cryptocoin made in NodeJS",
+  "main": "src/server.js",
+  "repository": "https://github.com/qpakzk/Frodocoin.git",
+  "author": "Sangwon Hong <qpakzk@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
