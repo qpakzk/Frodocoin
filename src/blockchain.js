@@ -20,7 +20,7 @@ const genesisBlock = new Block(
 
 let blockchain = [genesisBlock];
 
-const getLastBlock = () => blockchain[blockchain.length - 1];
+const getNewestBlock = () => blockchain[blockchain.length - 1];
 
 const getTimestamp = () => new Date().getTime() / 1000;
 
@@ -29,7 +29,7 @@ const getBlockchain = () => blockchain;
 const createHash = (index, previousHash, timestamp, data) => 
     CryptoJS.SHA256(index + previousHash + timestamp + JSON.stringify(data)).toString();
 const createNewBlock = data => {
-    const previousBlock = getLastBlock();
+    const previousBlock = getNewestBlock();
     const newBlockIndex = previousBlock.index + 1;
     const newTimestamp = getTimestamp();
     const newHash = createHash(
@@ -53,8 +53,8 @@ const createNewBlock = data => {
 
 const getBlocksHash = (block) => createHash(block.index, block.previousHash, block.timestamp, block.data);
 
-const isNewBlockValid = (candidateBlock, lastestBlock) => {
-    if(!isNewStructureValid(candidateBlock)) {
+const isBlockValid = (candidateBlock, lastestBlock) => {
+    if(!isBlockStructureValid(candidateBlock)) {
         console.log("The candidate block is not valid.");
         return false;
     }
@@ -74,7 +74,7 @@ const isNewBlockValid = (candidateBlock, lastestBlock) => {
     return true;
 }
 
-const isNewStructureValid = block => {
+const isBlockStructureValid = block => {
     return (
         typeof block.index === 'number' &&
         typeof block.hash === 'string' &&
@@ -95,7 +95,7 @@ const isChainValid = candidateChain => {
     }
 
     for(let i = 1; i < candidateChain.length; i++) {
-        if(!isNewBlockValid(candidateChain[i], candidateChain[i - 1])) 
+        if(!isBlockValid(candidateChain[i], candidateChain[i - 1])) 
             return false;
     }
     return true;
@@ -112,7 +112,7 @@ const replaceChain = candidateChain => {
 }
 
 const addBlockToChain = candidateBlock => {
-    if(isNewBlockValid(candidateBlock, getLastBlock())) {
+    if(isBlockValid(candidateBlock, getNewestBlock())) {
         getBlockchain().push(candidateBlock);
         return true;
     }
@@ -122,7 +122,9 @@ const addBlockToChain = candidateBlock => {
 }
 
 module.exports = {
-    getLastBlock,
-    getBlockchain,
-    createNewBlock
-}
+	getNewestBlock,
+	getBlockchain,
+	createNewBlock,
+	addBlockToChain,
+	replaceChain,
+};
